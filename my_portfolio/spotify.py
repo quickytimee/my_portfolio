@@ -54,7 +54,6 @@ class TrackState(rx.State):
         except Exception as e:
             print(f"Error Spotify: {e}")
 
-
 def track_item(track: dict) -> rx.Component:
     return rx.hstack(
         rx.image(src=track["image"], width="50px", height="50px", border_radius="8px"),
@@ -68,8 +67,6 @@ def track_item(track: dict) -> rx.Component:
         padding_y="2",
         width="100%",
     )
-
-
 def spotify_widget() -> rx.Component:
     return rx.card(
         rx.vstack(
@@ -82,8 +79,6 @@ def spotify_widget() -> rx.Component:
         width="100%",
         padding="4",
     )
-
-
 def spotify_playlist_embed() -> rx.Component:
     return rx.vstack(
         rx.heading("🎧 Currently On Repeat", size="5"),

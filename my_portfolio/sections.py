@@ -1,6 +1,4 @@
 import reflex as rx
-
-
 def profile_header() -> rx.Component:
     return rx.vstack(
         rx.center(
@@ -23,8 +21,6 @@ def profile_header() -> rx.Component:
         width="100%",
         align_items="center",
     )
-
-
 def about_card() -> rx.Component:
     return rx.card(
         rx.vstack(
@@ -41,8 +37,6 @@ def about_card() -> rx.Component:
         width="100%",
         padding="4",
     )
-
-
 def education_card() -> rx.Component:
     return rx.card(
         rx.vstack(
@@ -70,8 +64,6 @@ def education_card() -> rx.Component:
         width="100%",
         padding="4",
     )
-
-
 def why_built_card() -> rx.Component:
     return rx.card(
         rx.vstack(
@@ -90,8 +82,6 @@ def why_built_card() -> rx.Component:
         width="100%",
         padding="4",
     )
-
-
 def social_links() -> rx.Component:
     hover_style = {"transform": "scale(1.05)", "transition": "all 0.2s ease-in-out"}
     return rx.hstack(
@@ -124,4 +114,80 @@ def social_links() -> rx.Component:
         spacing="3",
         justify="center",
         width="100%",
+    )
+def top_bar() -> rx.Component:
+    return rx.hstack(
+        rx.spacer(),
+        rx.color_mode.button(size="2", variant="ghost"),
+        width="100%",
+    )
+
+
+def skills_card() -> rx.Component:
+    skills = ["Python", "Reflex", "Git & GitHub", "REST APIs", "Spotipy", "VS Code", "PyCharm"]
+    return rx.card(
+        rx.vstack(
+            rx.heading("🛠️ Tech Stack & Tools", size="5", text_align="center", width="100%"),
+            rx.flex(
+                *[rx.badge(skill, variant="soft", color_scheme="indigo", size="2") for skill in skills],
+                wrap="wrap",
+                spacing="2",
+                justify="center",
+                width="100%",
+                padding_top="2",
+            ),
+            align_items="center",
+            width="100%",
+        ),
+        width="100%",
+        padding="4",
+    )
+def projects_card() -> rx.Component:
+    return rx.card(
+        rx.vstack(
+            rx.heading("🚀 Featured Projects", size="5", text_align="center", width="100%"),
+            rx.box(
+                rx.vstack(
+                    rx.hstack(
+                        rx.text("Personal Portfolio Web App", weight="bold", size="3"),
+                        rx.spacer(),
+                        rx.link(
+                            rx.badge("GitHub ↗", color_scheme="gray", variant="surface"),
+                            href="https://github.com/quickytimee/my_portfolio",
+                            is_external=True,
+                        ),
+                        width="100%",
+                        align_items="center",
+                    ),
+                    rx.text(
+                        "Web portofolio interaktif full-stack dengan Python & Reflex, dilengkapi integrasi real-time Spotify API OAuth.",
+                        size="2",
+                        color="var(--gray-11)",
+                    ),
+                    rx.hstack(
+                        rx.badge("Python", size="1", color_scheme="blue"),
+                        rx.badge("Reflex", size="1", color_scheme="purple"),
+                        rx.badge("Spotify API", size="1", color_scheme="green"),
+                        spacing="2",
+                    ),
+                    align_items="start",
+                    spacing="2",
+                ),
+                width="100%",
+                padding_top="2",
+            ),
+            align_items="start",
+            width="100%",
+        ),
+        width="100%",
+        padding="4",
+    )
+def footer_text() -> rx.Component:
+    return rx.text(
+        "© 2026 Ahmad Armin Ramadan. Built with Python & Reflex.",
+        size="1",
+        color="var(--gray-10)",
+        text_align="center",
+        padding_top="4",
+        padding_bottom="2",
     )
