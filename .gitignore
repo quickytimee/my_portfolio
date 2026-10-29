@@ -16,3 +16,4 @@ __pycache__/
 **/.cache*
 get_token.py
 **/get_token.py
+uploaded_files/

@@ -37,10 +37,17 @@ class AchievementState(rx.State):
     achieved_on: str = ""
     message: str = ""
 
+    def set_title(self, value: str):
+        self.title = value
+
+    def set_description(self, value: str):
+        self.description = value
+
+    def set_achieved_on(self, value: str):
+        self.achieved_on = value
+
     def set_category(self, value: str):
         self.category = value
-
-    # -----------------------------------
 
     def set_password(self, value: str):
         self.password = value
