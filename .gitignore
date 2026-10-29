@@ -5,7 +5,14 @@ assets/external/
 *.py[cod]
 __pycache__/
 .env
+**/.env
 .venv/
+**/.venv/
 .idea/
+**/.idea/
 .cache
+.cache*
+**/.cache
+**/.cache*
 get_token.py
+**/get_token.py
