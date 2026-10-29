@@ -17,3 +17,4 @@ __pycache__/
 get_token.py
 **/get_token.py
 uploaded_files/
+.env.*
