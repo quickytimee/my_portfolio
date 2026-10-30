@@ -7,8 +7,8 @@ from pathlib import Path
 import reflex as rx
 
 DATA_FILE = Path("data/achievements.json")
-ALLOWED_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
-MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MB
+ALLOWED_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".pdf"}
+MAX_IMAGE_BYTES = 10 * 1024 * 1024
 
 
 def _read() -> list[dict]:
@@ -83,17 +83,23 @@ class AchievementState(rx.State):
             return
 
         filename = ""
+        kind = "image"
         if files:
             f = files[0]
             original = getattr(f, "filename", None) or getattr(f, "name", None) or ""
             ext = Path(original).suffix.lower()
             if ext not in ALLOWED_EXT:
-                self.message = "Format foto harus jpg, png, webp, atau gif."
+                self.message = "Format file harus jpg, png, webp, gif, atau pdf."
                 return
             data = await f.read()
             if len(data) > MAX_IMAGE_BYTES:
-                self.message = "Foto maksimal 5 MB."
+                self.message = "File maksimal 10 MB."
                 return
+            if ext == ".pdf":
+                if not data.startswith(b"%PDF"):
+                    self.message = "File PDF tidak valid."
+                    return
+                kind = "pdf"
             filename = f"{uuid.uuid4().hex}{ext}"
             upload_dir = rx.get_upload_dir()
             upload_dir.mkdir(parents=True, exist_ok=True)
@@ -109,6 +115,7 @@ class AchievementState(rx.State):
                 "description": self.description.strip(),
                 "date": self.achieved_on,
                 "image": filename,
+                "kind": kind,
             },
         )
         _write(items)
@@ -135,12 +142,20 @@ def item_card(item: dict) -> rx.Component:
         rx.vstack(
             rx.cond(
                 item["image"] != "",
-                rx.image(
-                    src=rx.get_upload_url(item["image"]),
-                    width="100%",
-                    max_height="220px",
-                    object_fit="cover",
-                    border_radius="8px",
+                rx.cond(
+                    item["kind"] == "pdf",
+                    rx.link(
+                        rx.button("📄 Lihat PDF", variant="soft", size="2"),
+                        href=rx.get_upload_url(item["image"]),
+                        is_external=True,
+                    ),
+                    rx.image(
+                        src=rx.get_upload_url(item["image"]),
+                        width="100%",
+                        max_height="220px",
+                        object_fit="cover",
+                        border_radius="8px",
+                    ),
                 ),
             ),
             rx.text(item["title"], weight="bold", size="4", color="#191919"),
@@ -262,9 +277,16 @@ def _editor() -> rx.Component:
                          width="100%"),
                 rx.text_area(placeholder="Keterangan singkat...", value=AchievementState.description,
                              on_change=AchievementState.set_description, rows="3", width="100%"),
-                rx.upload(rx.text("Klik atau drop file foto/sertifikat di sini", size="2"), id="upload_img",
-                          max_files=1, width="100%"),
-                rx.text(rx.selected_files("upload_img"), size="1"),
+                rx.upload(
+                    rx.text("Klik atau drop file foto/PDF di sini", size="2"),
+                    id="upload_img",
+                    max_files=1,
+                    accept={
+                        "image/*": [".jpg", ".jpeg", ".png", ".webp", ".gif"],
+                        "application/pdf": [".pdf"],
+                    },
+                    width="100%",
+                ),
                 rx.button("Simpan Data", width="100%",
                           on_click=lambda: AchievementState.save(rx.upload_files(upload_id="upload_img"))),
                 rx.cond(AchievementState.message != "", rx.text(AchievementState.message, size="2")),
